@@ -3,45 +3,45 @@
 # Author: warning
 # userManager v1.0
 
-# \e[5m  - blink
-# \e[0m  - default
-# \e[1m  - bold
-# \e[31m - red
-# \e[32m - green
-# \e[96m - light cyan
+red='\e[31m'   # red
+green='\e[32m' # green
+cyan='\e[96m'  # cyan
+blink='\e[5m'  # blink
+def='\e[0m'    # default
+bold='\e[1m'   # bold
 
 # Making sure Captain is on board
 if [[ $(id -u) -ne 0 ]]
 	then 
-		echo -e "\e[31m\e[1mPlease run as root\e[0m"
+		echo -e "${red}Please run as root${def}"
 		exit 
 fi
 # Displaying Welcome message
 if [[ "$1" = "" ]]
 	then
-		echo -e "\e[96m\nWelcome to userManager utility\n\nAvailable keys are: \n\e[31m-a\e[0m \e[96m[add a user]\n\e[31m-b\e[0m \e[96m[delete a user]\n\e[31m-h\e[0m \e[96m[print help mesage]\nexample: myuseradd.sh -h\n\e[0m"
+		echo -e "${cyan}\nWelcome to userManager utility\n\nAvailable keys are: \n${red}-a ${cyan}[add a user]\n${red}-b ${cyan}[delete a user]\n${red}-h ${cyan}[print help mesage]\nexample: myuseradd.sh -h\n${def}"
 fi
 # Got lost? Need help? 
 if [[ "$1" = -h ]] || [[ "$1" = --help ]]
 	then 
-		echo -e "\n\e[96mUSAGE: \n\e[31mmyuseradd.sh -a\e[96m    - add a user account \n\e[31mmyuseradd.sh -d\e[96m    - remove a user account \n\e[31mmyuseradd.sh -h\e[96m    - display this usage message\n\e[0m"
+		echo -e "\n${cyan}USAGE: \n${red}myuseradd.sh -a${cyan}    - add a user account \n${red}myuseradd.sh -d${cyan}    - remove a user account \n${red}myuseradd.sh -h${cyan}    - display this usage message\n${def}"
 fi
 # Adding user to the system
 if [[ "$1" = -a ]]
 	then
-		echo -e "\e[96mType name of a user to add\e[31m"
+		echo -e "${cyan}Type name of a user to add${red}"
 		read name
 # Making sure the username does not have a twin		
 		user=$(cat /etc/passwd | grep $name | cut -d":" -f1)
 		if [[ $user = "$name" ]]	
 			then
-				echo -e "\e[31mOperation forbidden. \nUser $name already exists on the system\nExiting\e[0m"	
+				echo -e "${red}Operation forbidden. \nUser $name already exists on the system\nExiting${def}"	
 				exit
 # Just use 'qwerty'. Nobody cares about the passwords. LOL
 			else
-				echo -e "\e[96mType password for user $name\e[0m"
+				echo -e "${cyan}Type password for user $name${def}"
 				read -s password
-				echo -e "\e[96mConfirm the password\e[0m"
+				echo -e "${cyan}Confirm the password${def}"
 				read -s password2
 				if [[ $password = $password2 ]]
 # Creating user & user home directory					
@@ -53,14 +53,14 @@ if [[ "$1" = -a ]]
 						count=50
 						while ((count>0))
 						do
-						echo -e "\e[96m#\c\t100%\e[0m"
+						echo -e "${cyan}#\c\t100%${def}"
 						sleep 0.02
 						((count--))
 						done
-						echo -e "\n\e[32m\e[1m[User $name was successfully added]\e[0m"
+						echo -e "\n${green}${bold}[User $name was successfully added]${def}"
 # Can't type a few characters correct ? The following message is for you then!					
 					else
-						echo -e "\e[31m\e[1m\e[5m[ERROR] \e[0m\e[31m\e[1mPasswords for $name did not match\nOperation canceled\e[0m"
+						echo -e "${red}${bold}${blink}[ERROR] ${def}${red}${bold}Passwords for $name did not match\nOperation canceled${def}"
 						exit
 				fi		
 		fi
@@ -68,14 +68,14 @@ fi
 # If user ate your yogurt and not welcome anymore 
 if [[ "$1" = -d ]]
 	then
-		echo -e "\e[96mType name of a user to delete\e[31m"
+		echo -e "${cyan}Type name of a user to delete${red}"
 		read name
 # Making sure someone else did not do this for you in the past		
 		user=$(cat /etc/passwd | grep $name | cut -d":" -f1)
 		if [[ $user = "$name" ]]
 # Last chance to apologize			
 			then
-				echo -e "\e[96mDo you really want to delete user $name ? (y/n)"
+				echo -e "${cyan}Do you really want to delete user $name ? (y/n)"
 				read answer
 				if [[ $answer = y ]] || [[ $answer = "" ]]
 					then 
@@ -84,15 +84,15 @@ if [[ "$1" = -d ]]
 						count=50
 						while ((count>0))
 						do
-						echo -e "\e[96m#\c\e[0m"
+						echo -e "#\c"
 						sleep 0.02
 						((count--))
 						done
-						echo -e "\n\e[32m\e[1m[User $name was successfully deleted]\e[0m"
+						echo -e "\n${green}${bold}[User $name was successfully deleted]${def}"
 					else
-						echo -e "\e[31m\e[1m[Operation canceled. User $name was not deleted]\e[0m"
+						echo -e "${red}${bold}[Operation canceled. User $name was not deleted]${def}"
 				fi
 			else 
-				echo -e "\e[32m\e[1mUser $name not found. Exiting\e[0m"		
+				echo -e "${red}${bold}User $name not found. Exiting${def}"		
 		fi
 fi
