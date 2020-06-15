@@ -20,7 +20,7 @@ fi
 case $1 in
 	# Displaying Welcome message
 	"")
-		figlet UserManager | lolcat
+		figlet UserManager
 		echo -e "${cyan}\nWelcome to userManager utility\n\nAvailable keys are: \n${red}-a ${cyan}[add a user]\n${red}-b ${cyan}[delete a user]\n${red}-h ${cyan}[print help mesage]\nexample: myuseradd.sh -h\n${def}"
 		;;
 	# Got lost? Need help? 
